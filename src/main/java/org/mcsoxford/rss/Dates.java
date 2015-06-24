@@ -32,6 +32,9 @@ final class Dates {
   private static final SimpleDateFormat RFC822 = new SimpleDateFormat(
       "EEE, dd MMM yyyy HH:mm:ss Z", java.util.Locale.ENGLISH);
 
+  private static final SimpleDateFormat RFC822_2 = new SimpleDateFormat(
+          "EEE, dd MMM yyyy, HH:mm", java.util.Locale.ENGLISH);
+
   /* Hide constructor */
   private Dates() {}
   
@@ -41,11 +44,20 @@ final class Dates {
    * @throws RSSFault if the string is not a valid RFC 822 date/time
    */
   static java.util.Date parseRfc822(String date) {
+    Exception ex = null;
     try {
       return RFC822.parse(date);
     } catch (ParseException e) {
-      throw new RSSFault(e);
+      ex = e;
     }
+
+    try {
+      return RFC822_2.parse(date);
+    } catch (ParseException e) {
+      ex = e;
+    }
+
+    throw new RSSFault(ex);
   }
 
 }
